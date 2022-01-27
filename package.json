@@ -1,0 +1,37 @@
+{
+  "name": "jogging-tracker",
+  "version": "1.0.0",
+  "description": "jogging tracker is a RESTful API app made to track jogging times.",
+  "main": "src/server.ts",
+  "scripts": {
+    "start": "node dist/server.js",
+    "build": "tsc",
+    "dev": "nodemon src/server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IslamGoher/jogging-tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IslamGoher/jogging-tracker/issues"
+  },
+  "homepage": "https://github.com/IslamGoher/jogging-tracker#readme",
+  "dependencies": {
+    "dotenv": "^14.3.2",
+    "express": "^4.17.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/morgan": "^1.9.3",
+    "@types/node": "^17.0.12",
+    "@types/pg": "^8.6.4",
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.5"
+  }
+}
