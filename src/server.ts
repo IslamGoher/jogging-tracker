@@ -4,9 +4,19 @@ dotenv.config();
 import morgan from "morgan";
 import * as swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./docs/swagger.json";
+import { createDB } from "./queries/create-db";
+import { createTables } from "./queries/create-tables";
 
 const app: Application = express();
 const port = process.env.PORT || 3000;
+
+(async function () {
+  // create database
+  await createDB();
+
+  // create tables
+  await createTables();
+})();
 
 // using morgan only in development mode
 if (process.env.NODE_ENV === "development") {
