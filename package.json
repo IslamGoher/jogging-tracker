@@ -4,9 +4,9 @@
   "description": "jogging tracker is a RESTful API app made to track jogging times.",
   "main": "src/server.ts",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "cross-env NODE_ENV=production node dist/server.js",
     "build": "tsc",
-    "dev": "nodemon src/server.ts",
+    "dev": "cross-env NODE_ENV=development nodemon src/server.ts",
     "lint": "eslint ./src . --ext .ts",
     "lint-fix": "eslint ./src . --ext .ts --fix"
   },
