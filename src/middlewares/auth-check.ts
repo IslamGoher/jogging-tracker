@@ -19,7 +19,7 @@ export function checkAuth(
 
     // validate cookies
     if(!cookies.token)
-      next(unAuthError);
+      return next(unAuthError);
 
     // validate jwt
     const payload: any = jwt.verify(cookies.token, `${process.env.JWT_SECRET}`);
