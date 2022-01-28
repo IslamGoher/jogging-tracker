@@ -26,7 +26,8 @@ export function checkAuth(
     
     // add user id to req.user
     req.user = {
-      id: payload.id
+      id: payload.id,
+      role: payload.role
     };
 
     next();
