@@ -9,6 +9,7 @@ import { createTables } from "./queries/create-tables";
 import { errorHandler } from "./middlewares/error-handler";
 import { checkAuth } from "./middlewares/auth-check";
 import { getNotFound } from "./controllers/not-found";
+import { router as authRouter } from "./routes/auth";
 
 const app: Application = express();
 const port = process.env.PORT || 3000;
@@ -21,6 +22,8 @@ const port = process.env.PORT || 3000;
   await createTables();
 })();
 
+app.use(express.json());
+
 // using morgan only in development mode
 if (process.env.NODE_ENV === "development") {
   // use swagger
@@ -32,6 +35,9 @@ if (process.env.NODE_ENV === "development") {
     }
   }));
 }
+
+// authentication routes
+app.use("/api/v1", authRouter);
 
 // check user authorization
 app.use(checkAuth);
