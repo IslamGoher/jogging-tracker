@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { parseCookie } from "../util/cookieParser";
 import { ErrorResponse } from "../util/error-response";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 // middleware function to validate JWT
 // and check if user is logged in
