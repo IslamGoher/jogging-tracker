@@ -7,6 +7,7 @@ import swaggerDocument from "./docs/swagger.json";
 import { createDB } from "./queries/create-db";
 import { createTables } from "./queries/create-tables";
 import { errorHandler } from "./middlewares/error-handler";
+import { checkAuth } from "./middlewares/auth-check";
 
 const app: Application = express();
 const port = process.env.PORT || 3000;
@@ -30,6 +31,9 @@ if (process.env.NODE_ENV === "development") {
     }
   }));
 }
+
+// check user authorization
+app.use(checkAuth);
 
 // use error handling middleware
 app.use(errorHandler);
