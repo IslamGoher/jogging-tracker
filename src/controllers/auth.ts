@@ -3,7 +3,8 @@ import { pool } from "../database/pool";
 import { signupData } from "../interfaces/auth-interfaces";
 import { ErrorResponse } from "../util/error-response";
 import { hash } from "bcrypt";
-import { sign } from "jsonwebtoken";
+import { signupQueries } from "../database/queries/auth-api-queries";
+import { storeTokenToClient } from "../util/store-jwt-to-client";
 
 // @route   POST '/api/v1/signup'
 // @desc    Add new user
@@ -17,9 +18,10 @@ export const postSignup = async (
     const data: signupData = req.body;
   
     // check if email already exists
-    const response = await pool.query("SELECT * FROM users WHERE email = $1;", [
-      data.email,
-    ]);
+    const response = await pool.query(
+      signupQueries.findUserWithEmail,
+      [data.email]
+    );
   
     if (response.rowCount > 0)
       return next(new ErrorResponse(400, "this email is already exists"));
@@ -30,7 +32,7 @@ export const postSignup = async (
   
     // add new user
     const currentUser = await pool.query(
-      "INSERT INTO users(fullname, email, password, role) VALUES($1, $2, $3, 'user') RETURNING user_id, role;",
+      signupQueries.addNewUser,
       [data.fullname, data.email, encryptedPassword]
     );
     
@@ -40,18 +42,15 @@ export const postSignup = async (
       role: currentUser.rows[0].role
     };
 
-    // create JWT
-    const token = sign(payload, `${process.env.JWT_SECRET}`);
-
     const MONTH_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 30;
 
     const cookieOption = {
       httpOnly: true,
       maxAge: Date.now() + MONTH_IN_MILLISECONDS
     };
-    
+
     // put token into cookies with httpOnly option
-    res.cookie("token", token, cookieOption);
+    storeTokenToClient(payload, res, cookieOption);
   
     // send response
     res.status(201).json({

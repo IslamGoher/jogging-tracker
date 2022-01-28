@@ -1,4 +1,4 @@
-import { client } from "../database/client";
+import { client } from "../client";
 
 // check if database exists, if not then create it
 export async function createDB() {
