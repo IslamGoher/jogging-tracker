@@ -7,3 +7,7 @@ export const signupQueries = {
   RETURNING user_id, role;
   `
 };
+
+export const loginQuery = `
+  SELECT user_id, password, role FROM users WHERE email = $1;
+`;

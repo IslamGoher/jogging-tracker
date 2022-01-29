@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { pool } from "../database/pool";
-import { signupData } from "../interfaces/auth-interfaces";
+import { signupData, loginData } from "../interfaces/auth-interfaces";
 import { ErrorResponse } from "../util/error-response";
-import { hash } from "bcrypt";
-import { signupQueries } from "../database/queries/auth-api-queries";
+import { hash, compare } from "bcrypt";
+import { signupQueries, loginQuery } from "../database/queries/auth-api-queries";
 import { storeTokenToClient } from "../util/store-jwt-to-client";
 
 // @route   POST '/api/v1/signup'
@@ -58,6 +58,62 @@ export const postSignup = async (
       message: "user successfully registerd"
     });
     
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+// @route   POST '/api/v1/login'
+// @desc    loging into website
+// @access  public
+export const postlogin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const data: loginData = req.body;
+
+    // find user using email
+    const result = await pool.query(loginQuery, [data.email]);
+
+    if (result.rowCount === 0) {
+      const errorMessage = "email not found";
+      return next(new ErrorResponse(404, errorMessage));
+    }
+
+    const encryptedPassword = result.rows[0].password;
+    
+    // validate password
+    const isPasswordValid = await compare(data.password, encryptedPassword);
+
+    if (!isPasswordValid) {
+      const errorMessage = "there's an error occured with email or password";
+      return next(new ErrorResponse(400, errorMessage));
+    }
+
+    const payload = {
+      id: result.rows[0].id,
+      role: result.rows[0].role
+    };
+
+    const MONTH_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 30;
+
+    const cookieOption = {
+      httpOnly: true,
+      maxAge: Date.now() + MONTH_IN_MILLISECONDS
+    };
+
+    // create jwt
+    storeTokenToClient(payload, res, cookieOption);
+
+    // send response
+    res.status(200).json({
+      code: 200,
+      message: "user logged in successfully"
+    });
+
   } catch (error) {
     next(error);
   }
