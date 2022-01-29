@@ -22,6 +22,7 @@ export const getJogging = async (
     // pagination
     const page: string = (req.query.page) ? `${req.query.page}` : "1";
     const LIMIT = 10;
+    const offsetNumber = (parseInt(page) * LIMIT) - LIMIT;
 
     // get all jogging with user id
     const jogging = await pool.query(
@@ -29,7 +30,7 @@ export const getJogging = async (
       " AND date > $2 AND date < $3" +
       " ORDER BY j.date DESC" +
       ` LIMIT ${LIMIT} OFFSET $4;`,
-      [req.user.id, dateFilter.from, dateFilter.to, (parseInt(page) * LIMIT)]
+      [req.user.id, dateFilter.from, dateFilter.to, offsetNumber]
     );
 
     if (jogging.rowCount === 0) {
