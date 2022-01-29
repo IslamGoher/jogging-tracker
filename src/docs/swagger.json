@@ -154,6 +154,18 @@
           }
         }
       }
+    },
+    "/api/v1/logout": {
+      "delete": {
+        "summary": "logout from website",
+        "tags": ["Authentication"],
+        "description": "Allow user to logout from the website",
+        "responses": {
+          "204": {
+            "description": "no content"
+          }
+        }
+      }
     }
   }
 }
