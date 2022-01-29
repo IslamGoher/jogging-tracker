@@ -15,6 +15,10 @@
     {
       "name": "Authentication",
       "description": "authentication methods"
+    },
+    {
+      "name": "Jogging",
+      "description": "jogging methods"
     }
   ],
   "paths": {
@@ -163,6 +167,176 @@
         "responses": {
           "204": {
             "description": "no content"
+          }
+        }
+      }
+    },
+    "/api/v1/jogging": {
+      "get": {
+        "summary": "List user jogging",
+        "tags": ["Jogging"],
+        "description": "List all jogging that user create and list all jogging records to admin",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "number of page",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "the date that search will starts with, example: '2021-01-29 04:15:00'",
+            "schema": {
+              "type": "date as a string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "description": "the date that search will ends at, example: '2022-01-29 04:15:00'",
+            "schema": {
+              "type": "date as a string"
+            }
+          }
+        ],
+        "responses": {
+          "200 : user": {
+            "description": "jogging data arrived successfully for regular user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "pageNumber": {
+                      "type": "number",
+                      "description": "the number of current page"
+                    },
+                    "count": {
+                      "type": "number",
+                      "description": "the count number of all jogging at the current page"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type":"object",
+                        "properties": {
+                          "jogging_id": {
+                            "type": "number",
+                            "description": "the id of current jogging"
+                          },
+                          "date": {
+                            "type": "date as a string",
+                            "description": "the date of jogging"
+                          },
+                          "distance": {
+                            "type": "number",
+                            "description": "the distance of jogging"
+                          },
+                          "time": {
+                            "type": "number",
+                            "description": "total time of jogging"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200 : admin": {
+            "description": "jogging data arrived successfully for admin user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "pageNumber": {
+                      "type": "number",
+                      "description": "the number of current page"
+                    },
+                    "count": {
+                      "type": "number",
+                      "description": "the count number of all jogging at the current page"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type":"object",
+                        "properties": {
+                          "jogging_id": {
+                            "type": "number",
+                            "description": "the id of current jogging"
+                          },
+                          "date": {
+                            "type": "date as a string",
+                            "description": "the date of jogging"
+                          },
+                          "distance": {
+                            "type": "number",
+                            "description": "the distance of jogging"
+                          },
+                          "time": {
+                            "type": "number",
+                            "description": "total time of jogging"
+                          },
+                          "user_id": {
+                            "type": "number",
+                            "description": "the id of user who own this jogging"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "define where is the error"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "the content doesn't found"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
