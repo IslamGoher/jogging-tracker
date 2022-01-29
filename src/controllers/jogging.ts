@@ -19,11 +19,17 @@ export const getJogging = async (
       to: (req.query.to) ? req.query.to : "3001-01-01"
     };
 
+    // pagination
+    const page: string = (req.query.page) ? `${req.query.page}` : "1";
+    const LIMIT = 10;
+
     // get all jogging with user id
     const jogging = await pool.query(
       getAllJoggingQuery +
-      " AND date > $2 AND date < $3;",
-      [req.user.id, dateFilter.from, dateFilter.to]
+      " AND date > $2 AND date < $3" +
+      " ORDER BY j.date DESC" +
+      ` LIMIT ${LIMIT} OFFSET $4;`,
+      [req.user.id, dateFilter.from, dateFilter.to, (parseInt(page) * LIMIT)]
     );
 
     if (jogging.rowCount === 0) {
@@ -32,7 +38,11 @@ export const getJogging = async (
     }
 
     // send response
-    res.status(200).json(jogging.rows);
+    res.status(200).json({
+      pageNumber: page,
+      count: jogging.rowCount,
+      date: jogging.rows
+    });
 
   } catch (error) {
     next(error);
