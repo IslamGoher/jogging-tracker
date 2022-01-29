@@ -104,3 +104,21 @@ export const postlogin = async (
     next(error);
   }
 };
+
+// @route   DELETE '/api/v1/logout'
+// @desc    loging out website
+// @access  private (only logged in user could access)
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // delete token from cookies
+    res.clearCookie("token");
+    res.status(204).end();
+
+  } catch (error) {
+    next(error);
+  }
+};
