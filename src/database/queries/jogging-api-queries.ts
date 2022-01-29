@@ -7,6 +7,6 @@ export const getAllJoggingQuery = `
     jogging as j
   on
     u.user_id = j.user_id
-  WHERE 
-    u.user_id = $1;
+  WHERE
+    j.user_id = $1;
 `;
