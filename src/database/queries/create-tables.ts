@@ -1,4 +1,4 @@
-import { pool } from "../database/pool";
+import { pool } from "../pool";
 
 // create tables
 export async function createTables() {
