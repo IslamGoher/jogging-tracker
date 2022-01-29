@@ -10,6 +10,7 @@ import { errorHandler } from "./middlewares/error-handler";
 import { checkAuth } from "./middlewares/auth-check";
 import { getNotFound } from "./controllers/not-found";
 import { router as authRouter } from "./routes/auth";
+import { router as joggingRouter } from "./routes/jogging";
 
 const app: Application = express();
 const port = process.env.PORT || 3000;
@@ -41,6 +42,9 @@ app.use("/api/v1", authRouter);
 
 // check user authorization
 app.use(checkAuth);
+
+// jogging routes
+app.use("/api/v1", joggingRouter);
 
 // not found middleware
 app.use(getNotFound);
