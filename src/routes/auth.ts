@@ -1,6 +1,9 @@
 import express, { Router } from "express";
 import { postSignup, postlogin } from "../controllers/auth";
-import { validateSignup } from "../middlewares/validation/auth-api-validation";
+import {
+  validateSignup,
+  validateLogin,
+} from "../middlewares/validation/auth-api-validation";
 
 export const router: Router = express.Router();
 
@@ -12,4 +15,4 @@ router.post("/signup", validateSignup, postSignup);
 // @route   POST '/api/v1/login'
 // @desc    loging into website
 // @access  public
-router.post("/login", postlogin);
+router.post("/login", validateLogin, postlogin);
