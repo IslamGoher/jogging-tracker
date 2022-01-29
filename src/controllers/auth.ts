@@ -42,15 +42,8 @@ export const postSignup = async (
       role: currentUser.rows[0].role
     };
 
-    const MONTH_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 30;
-
-    const cookieOption = {
-      httpOnly: true,
-      maxAge: Date.now() + MONTH_IN_MILLISECONDS
-    };
-
     // put token into cookies with httpOnly option
-    storeTokenToClient(payload, res, cookieOption);
+    storeTokenToClient(payload, res);
   
     // send response
     res.status(201).json({
@@ -98,15 +91,8 @@ export const postlogin = async (
       role: result.rows[0].role
     };
 
-    const MONTH_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 30;
-
-    const cookieOption = {
-      httpOnly: true,
-      maxAge: Date.now() + MONTH_IN_MILLISECONDS
-    };
-
     // create jwt
-    storeTokenToClient(payload, res, cookieOption);
+    storeTokenToClient(payload, res);
 
     // send response
     res.status(200).json({
