@@ -12,8 +12,19 @@ export const getJogging = async (
   next: NextFunction
 ) => {
   try {
+
+    // filtering by date
+    const dateFilter = {
+      from: (req.query.from) ? req.query.from : "0001-01-01",
+      to: (req.query.to) ? req.query.to : "3001-01-01"
+    };
+
     // get all jogging with user id
-    const jogging = await pool.query(getAllJoggingQuery, [req.user.id]);
+    const jogging = await pool.query(
+      getAllJoggingQuery +
+      " AND date > $2 AND date < $3;",
+      [req.user.id, dateFilter.from, dateFilter.to]
+    );
 
     if (jogging.rowCount === 0) {
       const errorMessage = "there's no jogging data found";

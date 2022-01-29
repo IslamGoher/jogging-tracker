@@ -8,5 +8,5 @@ export const getAllJoggingQuery = `
   on
     u.user_id = j.user_id
   WHERE
-    j.user_id = $1;
+    j.user_id = $1
 `;
