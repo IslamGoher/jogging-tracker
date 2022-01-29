@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { pool } from "../database/pool";
-import { getAllJoggingQuery } from "../database/queries/jogging-api-queries";
 import { ErrorResponse } from "../util/error-response";
+import { listJogging } from "../util/get-jogging";
 
 // @route   GET '/api/v1/jogging'
 // @desc    list all jogging data
@@ -12,11 +11,10 @@ export const getJogging = async (
   next: NextFunction
 ) => {
   try {
-
     // filtering by date
     const dateFilter = {
-      from: (req.query.from) ? req.query.from : "0001-01-01",
-      to: (req.query.to) ? req.query.to : "3001-01-01"
+      from: (req.query.from) ? `${req.query.from}` : "0001-01-01",
+      to: (req.query.to) ? `${req.query.to}` : "3001-01-01"
     };
 
     // pagination
@@ -24,14 +22,9 @@ export const getJogging = async (
     const LIMIT = 10;
     const offsetNumber = (parseInt(page) * LIMIT) - LIMIT;
 
-    // get all jogging with user id
-    const jogging = await pool.query(
-      getAllJoggingQuery +
-      " AND date > $2 AND date < $3" +
-      " ORDER BY j.date DESC" +
-      ` LIMIT ${LIMIT} OFFSET $4;`,
-      [req.user.id, dateFilter.from, dateFilter.to, offsetNumber]
-    );
+    // function to decide for which user jogging will listed
+    // and get jogging data from database
+    const jogging = await listJogging(req.user, LIMIT, dateFilter, offsetNumber);
 
     if (jogging.rowCount === 0) {
       const errorMessage = "there's no jogging data found";
