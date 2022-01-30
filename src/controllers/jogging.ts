@@ -35,7 +35,7 @@ export const getJogging = async (
     res.status(200).json({
       pageNumber: page,
       count: jogging.rowCount,
-      date: jogging.rows
+      data: jogging.rows
     });
 
   } catch (error) {
