@@ -27,3 +27,9 @@ export const getOneJoggingQuery = `
   WHERE
     jogging_id = $1;
 `;
+
+export const addJoggingQuery = `
+  INSERT INTO
+    jogging(date, distance, time, speed, user_id)
+    VALUES($1, $2, $3, $4, $5);
+`;
