@@ -1,7 +1,8 @@
 import express, { Router } from "express";
-import { getJogging, getOneJogging } from "../controllers/jogging";
+import { getJogging, getOneJogging, postJogging } from "../controllers/jogging";
 import { checkRoleForJoggingApi } from "../middlewares/auth-role-check";
 import {
+  validateAddJogging,
   validateGetJogging,
   validateGetOneJogging,
 } from "../middlewares/validation/jogging-api-validation";
@@ -21,4 +22,14 @@ router.get(
   checkRoleForJoggingApi,
   validateGetOneJogging,
   getOneJogging
+);
+
+// @route   GET '/api/v1/jogging/new'
+// @desc    add new jogging data
+// @access  private (only authorized user can access jogging)
+router.post(
+  "/jogging/new",
+  checkRoleForJoggingApi,
+  validateAddJogging,
+  postJogging
 );

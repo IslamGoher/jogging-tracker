@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { QueryResult } from "pg";
 import { pool } from "../database/pool";
-import { getOneJoggingQuery } from "../database/queries/jogging-api-queries";
+import {
+  addJoggingQuery,
+  getOneJoggingQuery
+} from "../database/queries/jogging-api-queries";
+import { calculateSpeed } from "../util/calculate-speed";
 import { ErrorResponse } from "../util/error-response";
 import { listJogging } from "../util/get-jogging";
 
@@ -76,6 +80,42 @@ export const getOneJogging = async (
 
     const joggingData = currentJogging.rows[0];
     res.status(200).json(joggingData);
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @route   GET '/api/v1/jogging/new'
+// @desc    add new jogging data
+// @access  private (only authorized user can access jogging)
+export const postJogging = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const data = req.body;
+    const userId = req.user.id;
+
+    // calculate speed
+    // speed in km/hour
+    const speed = calculateSpeed(data.time, data.distance);
+
+    // add data to database
+    await pool.query(addJoggingQuery, [
+      data.date,
+      data.distance,
+      data.time,
+      speed,
+      userId
+    ]);
+
+    // send response
+    res.status(201).json({
+      code: 201,
+      message: "jogging added successfully"
+    });
 
   } catch (error) {
     next(error);
