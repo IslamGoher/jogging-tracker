@@ -18,4 +18,12 @@ export const getAllJoggingQuery = {
     jogging
   `
 };
-;
+
+export const getOneJoggingQuery = `
+  SELECT
+    jogging_id, date, distance, time, user_id
+  FROM
+    jogging
+  WHERE
+    jogging_id = $1;
+`;

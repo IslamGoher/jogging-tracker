@@ -318,6 +318,178 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "user isn't authenticated to access this content"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "user isn't authorized to access this content"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "the content doesn't found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/jogging/{joggingId}": {
+      "get": {
+        "summary": "get one jogging",
+        "tags": ["Jogging"],
+        "description": "get one jogging to user or admin",
+        "parameters": [
+          {
+            "name": "joggingId",
+            "in": "path",
+            "required": true,
+            "description": "the id of jogging data",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "jogging data arrived successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "jogging_id": {
+                      "type": "number",
+                      "description": "the id of current jogging"
+                    },
+                    "date": {
+                      "type": "date as a string",
+                      "description": "the date of jogging"
+                    },
+                    "distance": {
+                      "type": "number",
+                      "description": "the distance of jogging"
+                    },
+                    "time": {
+                      "type": "number",
+                      "description": "total time of jogging"
+                    },
+                    "user_id": {
+                      "type": "number",
+                      "description": "the id of user who own this jogging record"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "define where is the error"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "user isn't authenticated to access this content"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "user isn't authorized to access this content"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "404": {
             "description": "not found",
             "content": {

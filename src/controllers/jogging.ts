@@ -1,4 +1,7 @@
 import { Request, Response, NextFunction } from "express";
+import { QueryResult } from "pg";
+import { pool } from "../database/pool";
+import { getOneJoggingQuery } from "../database/queries/jogging-api-queries";
 import { ErrorResponse } from "../util/error-response";
 import { listJogging } from "../util/get-jogging";
 
@@ -37,6 +40,42 @@ export const getJogging = async (
       count: jogging.rowCount,
       data: jogging.rows
     });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @route   GET '/api/v1/jogging/:id'
+// @desc    get one jogging data by id
+// @access  private (only authorized user can access jogging)
+export const getOneJogging = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const joggingId = req.params.id;
+
+    let currentJogging: QueryResult;
+    
+    currentJogging = await pool.query(
+      getOneJoggingQuery,
+      [joggingId]
+    );
+
+    if (currentJogging.rowCount === 0) {
+      const errorMessage = "there's no jogging found with given id";
+      return next(new ErrorResponse(404, errorMessage));
+    }
+
+    const userId = currentJogging.rows[0].user_id;
+      
+    if (req.user.role === "user" && req.user.id != userId)
+      return next(new ErrorResponse(403, "forbidden"));
+
+    const joggingData = currentJogging.rows[0];
+    res.status(200).json(joggingData);
 
   } catch (error) {
     next(error);
