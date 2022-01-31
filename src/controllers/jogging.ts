@@ -3,8 +3,10 @@ import { QueryResult } from "pg";
 import { pool } from "../database/pool";
 import {
   addJoggingQuery,
+  deleteJoggingQuery,
   getOneJoggingQuery,
-  updateJoggingQueries
+  findJoggingQuery,
+  updateJoggingQuery
 } from "../database/queries/jogging-api-queries";
 import { calculateSpeed } from "../util/calculate-speed";
 import { ErrorResponse } from "../util/error-response";
@@ -137,7 +139,7 @@ export const putJogging = async (
 
     // find jogging data
     const currentJogging = await pool.query(
-      updateJoggingQueries.findJogging,
+      findJoggingQuery,
       [joggingId]
     );
 
@@ -156,7 +158,7 @@ export const putJogging = async (
     const newSpeed = calculateSpeed(data.time, data.distance);
 
     // update data
-    await pool.query(updateJoggingQueries.updateJogging, [
+    await pool.query(updateJoggingQuery, [
       data.date,
       data.distance,
       data.time,
@@ -168,6 +170,48 @@ export const putJogging = async (
     res.status(200).json({
       code: 200,
       message: "jogging updated successfully"
+    });
+    
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @route   DELETE '/api/v1/jogging/:id'
+// @desc    delete jogging data by id
+// @access  private (only authorized user can access jogging)
+export const deleteJogging = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const joggingId = req.params.id;
+
+    // find jogging data
+    const currentJogging = await pool.query(
+      findJoggingQuery,
+      [joggingId]
+    );
+
+    if (currentJogging.rowCount === 0) {
+      const errorMessage = "there's no jogging founded with given id";
+      return next(new ErrorResponse(404, errorMessage));
+    }
+
+    const userId = currentJogging.rows[0].user_id;
+
+    // check user authorization
+    if (req.user.role === "user" && req.user.id != userId)
+      return next(new ErrorResponse(403, "forbidden"));
+
+    // delete jogging
+    await pool.query(deleteJoggingQuery, [joggingId]);
+
+    // send response
+    res.status(200).json({
+      code: 200,
+      message: "jogging deleted successfully"
     });
     
   } catch (error) {

@@ -34,24 +34,30 @@ export const addJoggingQuery = `
     VALUES($1, $2, $3, $4, $5);
 `;
 
-export const updateJoggingQueries = {
-  findJogging: `
-    SELECT
-      user_id
-    FROM
-      jogging
-    WHERE
-      jogging_id = $1;
-  `,
-  updateJogging: `
-    UPDATE
-      jogging
-    SET
-      date = $1,
-      distance = $2,
-      time = $3,
-      speed = $4
-    WHERE
-      jogging_id = $5;
-  `
-};
+export const findJoggingQuery = `
+  SELECT
+    user_id
+  FROM
+    jogging
+  WHERE
+    jogging_id = $1;
+`;
+
+export const updateJoggingQuery = `
+  UPDATE
+    jogging
+  SET
+    date = $1,
+    distance = $2,
+    time = $3,
+    speed = $4
+  WHERE
+    jogging_id = $5;
+`;
+
+export const deleteJoggingQuery = `
+  DELETE FROM
+    jogging
+  WHERE
+   jogging_id = $1;
+`;
