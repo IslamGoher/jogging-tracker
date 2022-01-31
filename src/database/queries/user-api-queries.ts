@@ -14,3 +14,12 @@ export const getUsersQueries = {
     users
   `
 };
+
+export const getOneUserQuery = `
+  SELECT
+    user_id, fullname, email, role
+  FROM
+    users
+  WHERE
+    user_id = $1;
+`;

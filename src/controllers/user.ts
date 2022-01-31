@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { pool } from "../database/pool";
 import { QueryResult } from "pg";
 import { ErrorResponse } from "../util/error-response";
-import { getUsersQueries } from "../database/queries/user-api-queries";
+import { getOneUserQuery, getUsersQueries } from "../database/queries/user-api-queries";
 
 // @route   GET '/api/v1/users'
 // @desc    list all users data
@@ -41,6 +41,36 @@ export const getUsers = async (
       count: usersData.rowCount,
       data: usersData.rows
     });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @route   GET '/api/v1/users/:id'
+// @desc    list one users data
+// @access  private (only admins and managers can access users data)
+export const getOneUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.params.id;
+
+    const userData = await pool.query(getOneUserQuery, [userId]);
+
+    if (userData.rowCount === 0) {
+      const errorMessage = "there's no user found with given id";
+      return next(new ErrorResponse(404, errorMessage));
+    }
+
+    const currentUser = userData.rows[0];
+
+    if (req.user.role === "manager" && currentUser.role !== "user")
+      return next(new ErrorResponse(403, "forbidden"));
+
+    res.status(200).json(currentUser);
 
   } catch (error) {
     next(error);
