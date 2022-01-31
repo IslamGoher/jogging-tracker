@@ -32,7 +32,7 @@ export function validateGetUsers(
   }
 }
 
-export function validateGetOneUser(
+export function validateGetDeleteUser(
   req: Request,
   res: Response,
   next: NextFunction

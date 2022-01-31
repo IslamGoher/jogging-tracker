@@ -3,6 +3,7 @@ import { pool } from "../database/pool";
 import { QueryResult } from "pg";
 import { ErrorResponse } from "../util/error-response";
 import {
+  deleteUserQuery,
   findUser,
   getOneUserQuery,
   getUsersQueries,
@@ -173,6 +174,51 @@ export const putUser = async (
     res.status(200).json({
       code: 200,
       message: "user updated successfully"
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @route   DELETE '/api/v1/users/:id'
+// @desc    delete user data
+// @access  private (only admins and managers can access users APIs)
+export const deleteUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.params.id;
+
+    // find user
+    const currentUser = await pool.query(findUser, [userId]);
+
+    // check if doesn't found
+    if (currentUser.rowCount === 0) {
+      const errorMessage = "there's no user founded with given id";
+      return next(new ErrorResponse(404, errorMessage));
+    }
+
+    const currentUserRole = currentUser.rows[0].role;
+
+    // check user authorization
+    if (req.user.role === "manager" && currentUserRole !== "user")
+      return next(new ErrorResponse(403, "forbidden"));
+
+    if (req.user.id == userId) {
+      const errorMessage = "you can't delete your account";
+      return next(new ErrorResponse(403, errorMessage));
+    }
+
+    // delete user
+    await pool.query(deleteUserQuery, [userId]);
+
+    // send response
+    res.status(200).json({
+      code: 200,
+      message: "user deleted successfully"
     });
 
   } catch (error) {
