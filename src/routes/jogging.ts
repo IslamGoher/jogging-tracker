@@ -1,5 +1,6 @@
 import express, { Router } from "express";
 import {
+  deleteJogging,
   getJogging,
   getOneJogging,
   postJogging,
@@ -8,6 +9,7 @@ import {
 import { checkRoleForJoggingApi } from "../middlewares/auth-role-check";
 import {
   validateAddJogging,
+  validateDeleteJogging,
   validateGetJogging,
   validateGetOneJogging,
   validateUpdateJogging,
@@ -21,13 +23,19 @@ export const router: Router = express.Router();
 router.get("/jogging", checkRoleForJoggingApi, validateGetJogging, getJogging);
 
 // @routes  GET '/api/v1/jogging/:id'
-//          PUT '/api/v1/jogging/:id'
 // @desc    get one jogging data by id
-//          update jogging data by id
+
+// @routes  PUT '/api/v1/jogging/:id'
+// @desc    update jogging data by id
+
+// @routes  DELETE '/api/v1/jogging/:id'
+// @desc    delete jogging data by id
+
 // @access  private (only authorized user can access jogging)
 router.route("/jogging/:id")
   .get(checkRoleForJoggingApi, validateGetOneJogging, getOneJogging)
-  .put(checkRoleForJoggingApi, validateUpdateJogging, putJogging);
+  .put(checkRoleForJoggingApi, validateUpdateJogging, putJogging)
+  .delete(checkRoleForJoggingApi, validateDeleteJogging, deleteJogging);
 
 // @route   POST '/api/v1/jogging/new'
 // @desc    add new jogging data

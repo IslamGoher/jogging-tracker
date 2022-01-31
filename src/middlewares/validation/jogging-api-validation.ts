@@ -135,3 +135,28 @@ export function validateUpdateJogging(
     next(error);
   }
 }
+
+export function validateDeleteJogging(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+
+    const joiSchema = Joi.object({
+      id: Joi.number().min(1).integer()
+    });
+
+    const result = joiSchema.validate({id: req.params.id});
+
+    if (result.error) {
+      const errorMessage = result.error.message;
+      return next(new ErrorResponse(400, errorMessage));
+    }
+
+    next();
+    
+  } catch (error) {
+    next(error);
+  }
+}
