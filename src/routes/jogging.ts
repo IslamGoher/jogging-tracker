@@ -2,6 +2,7 @@ import express, { Router } from "express";
 import {
   deleteJogging,
   getJogging,
+  getJoggingReport,
   getOneJogging,
   postJogging,
   putJogging
@@ -46,3 +47,8 @@ router.post(
   validateAddJogging,
   postJogging
 );
+
+// @route   GET '/api/v1/report/jogging'
+// @desc    get report on average speed and distance per week
+// @access  private (only authorized user can access jogging)
+router.get("/report/jogging", checkRoleForJoggingApi, getJoggingReport);
