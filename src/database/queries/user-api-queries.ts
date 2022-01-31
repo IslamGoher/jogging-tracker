@@ -5,12 +5,12 @@ export const getUsersQueries = {
     FROM
       users
     WHERE
-      role = 'user';
+      role = 'user'
   `,
   admin: `
   SELECT
     user_id, fullname, email, role
   FROM
-    users;
+    users
   `
 };

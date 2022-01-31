@@ -15,11 +15,21 @@ export const getUsers = async (
   try {
     let usersData: QueryResult;
 
+    // pagination
+    const page: string = (req.query.page) ? `${req.query.page}` : "1";
+    const LIMIT = 10;
+    const offsetNumber = (parseInt(page) * LIMIT) - LIMIT;
+
+    const PAGINATION_QUERY = `
+      ORDER BY user_id ASC
+      LIMIT ${LIMIT} OFFSET ${offsetNumber};
+    `;
+
     if (req.user.role === "manager")
-      usersData = await pool.query(getUsersQueries.manager);
+      usersData = await pool.query(getUsersQueries.manager + PAGINATION_QUERY);
 
     else
-      usersData = await pool.query(getUsersQueries.admin);
+      usersData = await pool.query(getUsersQueries.admin + PAGINATION_QUERY);
 
     if (usersData.rowCount === 0) {
       const errorMessage = "there's no users founded";
