@@ -61,3 +61,19 @@ export const deleteJoggingQuery = `
   WHERE
    jogging_id = $1;
 `;
+
+export const joggingReportquery = `
+  SELECT
+    *
+  FROM 
+    (
+      SELECT
+        AVG(speed) AS average_speed, AVG(distance) AS average_distance
+      FROM
+        jogging
+      WHERE
+        date >= (SELECT DATE_TRUNC('week', NOW()))
+        AND user_id = $1
+    ) AS t
+  WHERE t IS NOT NULL;
+`;

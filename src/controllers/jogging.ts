@@ -6,7 +6,8 @@ import {
   deleteJoggingQuery,
   getOneJoggingQuery,
   findJoggingQuery,
-  updateJoggingQuery
+  updateJoggingQuery,
+  joggingReportquery
 } from "../database/queries/jogging-api-queries";
 import { calculateSpeed } from "../util/calculate-speed";
 import { ErrorResponse } from "../util/error-response";
@@ -213,6 +214,40 @@ export const deleteJogging = async (
       code: 200,
       message: "jogging deleted successfully"
     });
+    
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @route   GET '/api/v1/report/jogging'
+// @desc    get report on average speed and distance per week
+// @access  private (only authorized user can access jogging)
+export const getJoggingReport = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.user.id;
+
+    const report = await pool.query(joggingReportquery, [userId]);
+
+    // check if there's no data
+    if (report.rowCount === 0) {
+      const errorMessage = "can't generate the report this week, since no jogging data recorded";
+      return next(new ErrorResponse(404, errorMessage));
+    }
+
+    // fix 2 numbers after the decimal point
+    const averageSpeed = report.rows[0].average_speed;
+    const averageDistance = report.rows[0].average_distance;
+    const resData = {
+      averageSpeed: parseFloat(averageSpeed).toFixed(2),
+      averageDistance: parseFloat(averageDistance).toFixed(2)
+    };
+
+    res.status(200).json(resData);
     
   } catch (error) {
     next(error);
