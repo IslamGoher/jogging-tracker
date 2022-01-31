@@ -23,3 +23,9 @@ export const getOneUserQuery = `
   WHERE
     user_id = $1;
 `;
+
+export const postUserQuery = `
+  INSERT INTO
+    users (fullname, email, password, role)
+    VALUES ($1, $2, $3, $4);
+`;
