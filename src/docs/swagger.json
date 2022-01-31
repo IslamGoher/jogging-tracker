@@ -1269,6 +1269,153 @@
             }
           }
         }
+      },
+      "put": {
+        "summary": "update one user",
+        "tags": ["User"],
+        "description": "update user data",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "the id of user",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "## please note that parameter `role` is only allowed if logged in user is `admin`",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullname": {
+                    "type": "string",
+                    "description": "user fullname"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "user email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "user password"
+                  },
+                  "role": {
+                    "type": "string",
+                    "description": "role that define user permissions [user, manager, admin]"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "user updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "message to inform user that user data updated successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "define where is the error"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "user isn't authenticated to access this content"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "user isn't authorized to access this content"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "the content doesn't found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/users/new": {
