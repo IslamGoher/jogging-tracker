@@ -1,5 +1,10 @@
 import express, { Router } from "express";
-import { getJogging, getOneJogging, postJogging } from "../controllers/jogging";
+import {
+  getJogging,
+  getOneJogging,
+  postJogging,
+  putJogging
+} from "../controllers/jogging";
 import { checkRoleForJoggingApi } from "../middlewares/auth-role-check";
 import {
   validateAddJogging,
@@ -14,17 +19,16 @@ export const router: Router = express.Router();
 // @access  private (only authorized user can access jogging)
 router.get("/jogging", checkRoleForJoggingApi, validateGetJogging, getJogging);
 
-// @route   GET '/api/v1/jogging/:id'
+// @routes  GET '/api/v1/jogging/:id'
+//          PUT '/api/v1/jogging/:id'
 // @desc    get one jogging data by id
+//          update jogging data by id
 // @access  private (only authorized user can access jogging)
-router.get(
-  "/jogging/:id",
-  checkRoleForJoggingApi,
-  validateGetOneJogging,
-  getOneJogging
-);
+router.route("/jogging/:id")
+  .get(checkRoleForJoggingApi, validateGetOneJogging, getOneJogging)
+  .put(checkRoleForJoggingApi, putJogging);
 
-// @route   GET '/api/v1/jogging/new'
+// @route   POST '/api/v1/jogging/new'
 // @desc    add new jogging data
 // @access  private (only authorized user can access jogging)
 router.post(

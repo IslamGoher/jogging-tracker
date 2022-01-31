@@ -3,7 +3,8 @@ import { QueryResult } from "pg";
 import { pool } from "../database/pool";
 import {
   addJoggingQuery,
-  getOneJoggingQuery
+  getOneJoggingQuery,
+  updateJoggingQueries
 } from "../database/queries/jogging-api-queries";
 import { calculateSpeed } from "../util/calculate-speed";
 import { ErrorResponse } from "../util/error-response";
@@ -86,7 +87,7 @@ export const getOneJogging = async (
   }
 };
 
-// @route   GET '/api/v1/jogging/new'
+// @route   POST '/api/v1/jogging/new'
 // @desc    add new jogging data
 // @access  private (only authorized user can access jogging)
 export const postJogging = async (
@@ -117,6 +118,58 @@ export const postJogging = async (
       message: "jogging added successfully"
     });
 
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @route   PUT '/api/v1/jogging/:id'
+// @desc    update jogging data
+// @access  private (only authorized user can access jogging)
+export const putJogging = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const data = req.body;
+    const joggingId = req.params.id;
+
+    // find jogging data
+    const currentJogging = await pool.query(
+      updateJoggingQueries.findJogging,
+      [joggingId]
+    );
+
+    if (currentJogging.rowCount === 0) {
+      const errorMessage = "there's no jogging founded with given id";
+      return next(new ErrorResponse(404, errorMessage));
+    }
+
+    const userId = currentJogging.rows[0].user_id;
+
+    // check user authorization
+    if (req.user.role === "user" && req.user.id != userId)
+      return next(new ErrorResponse(403, "forbidden"));
+
+    // calculate new speed
+    const newSpeed = calculateSpeed(data.time, data.distance);
+
+    // update data
+    await pool.query(updateJoggingQueries.updateJogging, [
+      data.date,
+      data.distance,
+      data.time,
+      newSpeed,
+      joggingId,
+    ]);
+
+    // send response
+    res.status(200).json({
+      code: 200,
+      message: "jogging updated successfully"
+    });
+    
   } catch (error) {
     next(error);
   }
