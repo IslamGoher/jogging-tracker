@@ -11,6 +11,7 @@ import { checkAuth } from "./middlewares/auth-check";
 import { getNotFound } from "./controllers/not-found";
 import { router as authRouter } from "./routes/auth";
 import { router as joggingRouter } from "./routes/jogging";
+import { router as userRouter } from "./routes/user";
 
 const app: Application = express();
 const port = process.env.PORT || 3000;
@@ -45,6 +46,9 @@ app.use(checkAuth);
 
 // jogging routes
 app.use("/api/v1", joggingRouter);
+
+// user routes
+app.use("/api/v1", userRouter);
 
 // not found middleware
 app.use(getNotFound);
