@@ -29,3 +29,24 @@ export const postUserQuery = `
     users (fullname, email, password, role)
     VALUES ($1, $2, $3, $4);
 `;
+
+export const findUser = `
+  SELECT
+    role
+  FROM
+    users
+  WHERE
+    user_id = $1;
+`;
+
+export const updateUserQuery = `
+  UPDATE
+    users
+  SET
+    fullname = $1,
+    email = $2,
+    password = $3,
+    role = $4
+  WHERE
+    user_id = $5;
+`;

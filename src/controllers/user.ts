@@ -3,9 +3,11 @@ import { pool } from "../database/pool";
 import { QueryResult } from "pg";
 import { ErrorResponse } from "../util/error-response";
 import {
+  findUser,
   getOneUserQuery,
   getUsersQueries,
-  postUserQuery
+  postUserQuery,
+  updateUserQuery
 } from "../database/queries/user-api-queries";
 import { hash } from "bcrypt";
 
@@ -82,7 +84,7 @@ export const getOneUser = async (
   }
 };
 
-// @route   GET '/api/v1/users/new'
+// @route   POST '/api/v1/users/new'
 // @desc    add new users
 // @access  private (only admins and managers can access users APIs)
 export const postUser = async (
@@ -115,6 +117,62 @@ export const postUser = async (
     res.status(201).json({
       code: 201,
       message: "user created successfully"
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @route   PUT '/api/v1/users/:id'
+// @desc    update user data
+// @access  private (only admins and managers can access users APIs)
+export const putUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.params.id;
+    const data = req.body;
+
+    // find user
+    const currentUser = await pool.query(findUser, [userId]);
+
+    // check if not found
+    if (currentUser.rowCount === 0) {
+      const errorMessage = "there's no user found with given id";
+      return next(new ErrorResponse(404, errorMessage));
+    }
+
+    const currentUserRole = currentUser.rows[0].role;
+
+    // check role
+    if (req.user.role === "manager" && currentUserRole !== "user")
+      return next(new ErrorResponse(403, "forbidden"));
+
+    // hash new password
+    const SALT = 10;
+    const hashedPassword = await hash(data.password, SALT);
+
+    let role = data.role;
+
+    if (req.user.role === "manager")
+      role = "user";
+
+    // update user data
+    await pool.query(updateUserQuery, [
+      data.fullname,
+      data.email,
+      hashedPassword,
+      role,
+      userId
+    ]);
+    
+    // send response
+    res.status(200).json({
+      code: 200,
+      message: "user updated successfully"
     });
 
   } catch (error) {
