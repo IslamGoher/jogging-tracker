@@ -37,6 +37,7 @@ export const getUsers = async (
     }
 
     res.status(200).json({
+      pageNumber: page,
       count: usersData.rowCount,
       data: usersData.rows
     });
