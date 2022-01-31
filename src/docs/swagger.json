@@ -565,7 +565,125 @@
                     },
                     "message": {
                       "type": "string",
-                      "description": "message to inform user that jogging created successfully"
+                      "description": "message to inform user that jogging updated successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "define where is the error"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "user isn't authenticated to access this content"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "user isn't authorized to access this content"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "the content doesn't found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "delete one jogging",
+        "tags": ["Jogging"],
+        "description": "delete jogging data",
+        "parameters": [
+          {
+            "name": "joggingId",
+            "in": "path",
+            "required": true,
+            "description": "the id of jogging data",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "jogging deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "message to inform user that jogging deleted successfully"
                     }
                   }
                 }
