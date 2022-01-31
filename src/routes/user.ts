@@ -5,6 +5,7 @@ import {
   validateAddNewUser,
   validateGetOneUser,
   validateGetUsers,
+  validateUpdateUser,
 } from "../middlewares/validation/user-api-validation";
 
 export const router: Router = express.Router();
@@ -23,7 +24,7 @@ router.get("/users", checkRoleForUserApi, validateGetUsers, getUsers);
 // @access  private (only admins and managers can access users data)
 router.route("/users/:id")
   .get(checkRoleForUserApi, validateGetOneUser, getOneUser)
-  .put(checkRoleForUserApi, putUser);
+  .put(checkRoleForUserApi, validateUpdateUser, putUser);
 
 // @route   POST '/api/v1/users/new'
 // @desc    add new users
