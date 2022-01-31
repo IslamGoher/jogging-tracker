@@ -9,6 +9,7 @@ import {
 import { checkRoleForJoggingApi } from "../middlewares/auth-role-check";
 import {
   validateAddJogging,
+  validateDeleteJogging,
   validateGetJogging,
   validateGetOneJogging,
   validateUpdateJogging,
@@ -34,7 +35,7 @@ router.get("/jogging", checkRoleForJoggingApi, validateGetJogging, getJogging);
 router.route("/jogging/:id")
   .get(checkRoleForJoggingApi, validateGetOneJogging, getOneJogging)
   .put(checkRoleForJoggingApi, validateUpdateJogging, putJogging)
-  .delete(checkRoleForJoggingApi, deleteJogging);
+  .delete(checkRoleForJoggingApi, validateDeleteJogging, deleteJogging);
 
 // @route   POST '/api/v1/jogging/new'
 // @desc    add new jogging data
