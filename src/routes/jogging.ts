@@ -10,6 +10,7 @@ import {
   validateAddJogging,
   validateGetJogging,
   validateGetOneJogging,
+  validateUpdateJogging,
 } from "../middlewares/validation/jogging-api-validation";
 
 export const router: Router = express.Router();
@@ -26,7 +27,7 @@ router.get("/jogging", checkRoleForJoggingApi, validateGetJogging, getJogging);
 // @access  private (only authorized user can access jogging)
 router.route("/jogging/:id")
   .get(checkRoleForJoggingApi, validateGetOneJogging, getOneJogging)
-  .put(checkRoleForJoggingApi, putJogging);
+  .put(checkRoleForJoggingApi, validateUpdateJogging, putJogging);
 
 // @route   POST '/api/v1/jogging/new'
 // @desc    add new jogging data
