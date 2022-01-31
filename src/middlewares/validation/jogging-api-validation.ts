@@ -34,7 +34,7 @@ export function validateGetJogging(
   }
 }
 
-export async function validateGetOneJogging(
+export function validateGetOneJogging(
   req: Request,
   res: Response,
   next: NextFunction
@@ -58,7 +58,7 @@ export async function validateGetOneJogging(
   }
 }
 
-export async function validateAddJogging(
+export function validateAddJogging(
   req: Request,
   res: Response,
   next: NextFunction
@@ -82,7 +82,49 @@ export async function validateAddJogging(
     const result = joiSchema.validate(req.body);
 
     if (result.error) {
-      
+      const errorMessage = result.error.message;
+      return next(new ErrorResponse(400, errorMessage));
+    }
+
+    next();
+    
+  } catch (error) {
+    next(error);
+  }
+}
+
+export function validateUpdateJogging(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const joiSchema = Joi.object({
+      id: Joi.number().min(1).integer(),
+      date: Joi.date().greater("1990-01-01").required(),
+      distance: Joi.number().min(1).required(),
+      time: Joi.string()
+        // add regular expression validation to validate time as HH:MM:SS
+        .pattern(
+          new RegExp(/^(?:(?:([01]?\d|2[0-3]):)([0-5]?\d):)([0-5]?\d)$/)
+        )
+        .required()
+        // customize joi error message
+        .messages({
+          "string.pattern.base": "time is invalid"
+        })
+    });
+
+    const dataObject = {
+      id: req.params.id,
+      date: req.body.date,
+      distance: req.body.distance,
+      time: req.body.time
+    };
+
+    const result = joiSchema.validate(dataObject);
+
+    if (result.error) {
       const errorMessage = result.error.message;
       return next(new ErrorResponse(400, errorMessage));
     }

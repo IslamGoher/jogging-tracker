@@ -511,6 +511,148 @@
             }
           }
         }
+      },
+      "put": {
+        "summary": "update one jogging",
+        "tags": ["Jogging"],
+        "description": "update jogging data",
+        "parameters": [
+          {
+            "name": "joggingId",
+            "in": "path",
+            "required": true,
+            "description": "the id of jogging data",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "date": {
+                    "type": "date",
+                    "description": "example: '2021-01-29 04:15:00'"
+                  },
+                  "distance": {
+                    "type": "number",
+                    "description": "distance in meters"
+                  },
+                  "time": {
+                    "type": "time as astring",
+                    "description": "example: '01:25:15'"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "jogging updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "message to inform user that jogging created successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "define where is the error"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "user isn't authenticated to access this content"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "user isn't authorized to access this content"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "description": "status code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "the content doesn't found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/jogging/new": {
