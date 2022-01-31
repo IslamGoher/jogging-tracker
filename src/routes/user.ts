@@ -1,7 +1,10 @@
 import express, { Router } from "express";
-import { getUsers } from "../controllers/user";
+import { getOneUser, getUsers } from "../controllers/user";
 import { checkRoleForUserApi } from "../middlewares/auth-role-check";
-import { validateGetUsers } from "../middlewares/validation/user-api-validation";
+import {
+  validateGetOneUser,
+  validateGetUsers,
+} from "../middlewares/validation/user-api-validation";
 
 export const router: Router = express.Router();
 
@@ -9,3 +12,8 @@ export const router: Router = express.Router();
 // @desc    list all users data
 // @access  private (only admins and managers can access users data)
 router.get("/users", checkRoleForUserApi, validateGetUsers, getUsers);
+
+// @route   GET '/api/v1/users/:id'
+// @desc    list one users data
+// @access  private (only admins and managers can access users data)
+router.get("/users/:id", checkRoleForUserApi, validateGetOneUser, getOneUser);
