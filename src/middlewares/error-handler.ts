@@ -2,7 +2,7 @@ import { ErrorRequestHandler, Request, Response, NextFunction } from "express";
 
 interface ErrorHandler extends ErrorRequestHandler {
   message: string;
-  code: number;
+  code: number | string;
 }
 
 export const errorHandler = (
@@ -20,7 +20,12 @@ export const errorHandler = (
     err.code = 403;
   }
 
-  res.status(err.code || 500).json({
+  if (err.code == "23505") {
+    err.message = "email already exists";
+    err.code = 400;
+  }
+
+  res.status(parseInt(`${err.code}`) || 500).json({
     code: err.code || 500,
     message: err.message || "server error"
   });
