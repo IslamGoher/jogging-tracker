@@ -9,7 +9,7 @@ import {
 import { checkRoleForUserApi } from "../middlewares/auth-role-check";
 import {
   validateAddNewUser,
-  validateGetOneUser,
+  validateGetDeleteUser,
   validateGetUsers,
   validateUpdateUser,
 } from "../middlewares/validation/user-api-validation";
@@ -32,9 +32,9 @@ router.get("/users", checkRoleForUserApi, validateGetUsers, getUsers);
 
 // @access  private (only admins and managers can access users data)
 router.route("/users/:id")
-  .get(checkRoleForUserApi, validateGetOneUser, getOneUser)
+  .get(checkRoleForUserApi, validateGetDeleteUser, getOneUser)
   .put(checkRoleForUserApi, validateUpdateUser, putUser)
-  .delete(checkRoleForUserApi, deleteUser);
+  .delete(checkRoleForUserApi, validateGetDeleteUser, deleteUser);
 
 // @route   POST '/api/v1/users/new'
 // @desc    add new users
