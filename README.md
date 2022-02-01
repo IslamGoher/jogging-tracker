@@ -9,7 +9,7 @@ jogging tracker is a RESTful API app made to track jogging times.
 [Database design schema](https://dbdesigner.page.link/ecDVLVaKY7yVTMBY9)
 
 ## ERD
-![](https://cdn.discordapp.com/attachments/936033307542560809/936033372814311444/Jogging_tracker_ERD.jpg)
+![](https://cdn.discordapp.com/attachments/936033307542560809/937873374376501269/ERD.jpg)
 
 ## API Documentation
 Run the server on development mode then go to the link bellow
