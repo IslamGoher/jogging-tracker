@@ -1,5 +1,11 @@
 import express, { Router } from "express";
-import { getOneUser, getUsers, postUser, putUser } from "../controllers/user";
+import {
+  deleteUser,
+  getOneUser,
+  getUsers,
+  postUser,
+  putUser,
+} from "../controllers/user";
 import { checkRoleForUserApi } from "../middlewares/auth-role-check";
 import {
   validateAddNewUser,
@@ -16,15 +22,19 @@ export const router: Router = express.Router();
 router.get("/users", checkRoleForUserApi, validateGetUsers, getUsers);
 
 // @route   GET '/api/v1/users/:id'
-// @desc    list one users data
+// @desc    list one user data
 
 // @route   PUT '/api/v1/users/:id'
 // @desc    update user data
 
+// @route   DELETE '/api/v1/users/:id'
+// @desc    delete user data
+
 // @access  private (only admins and managers can access users data)
 router.route("/users/:id")
   .get(checkRoleForUserApi, validateGetOneUser, getOneUser)
-  .put(checkRoleForUserApi, validateUpdateUser, putUser);
+  .put(checkRoleForUserApi, validateUpdateUser, putUser)
+  .delete(checkRoleForUserApi, deleteUser);
 
 // @route   POST '/api/v1/users/new'
 // @desc    add new users

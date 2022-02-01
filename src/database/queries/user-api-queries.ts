@@ -50,3 +50,10 @@ export const updateUserQuery = `
   WHERE
     user_id = $5;
 `;
+
+export const deleteUserQuery = `
+  DELETE FROM
+    users
+  WHERE
+    user_id = $1;
+`;
