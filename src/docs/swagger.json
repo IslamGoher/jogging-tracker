@@ -196,7 +196,8 @@
             "required": false,
             "description": "the date that search will starts with, example: '2021-01-29 04:15:00'",
             "schema": {
-              "type": "date as a string"
+              "type": "string",
+              "description": "the date of jogging (YYYY-MM-DD HH:MM:SS)"
             }
           },
           {
@@ -205,99 +206,25 @@
             "required": false,
             "description": "the date that search will ends at, example: '2022-01-29 04:15:00'",
             "schema": {
-              "type": "date as a string"
+              "type": "string",
+              "description": "the date of jogging (YYYY-MM-DD HH:MM:SS)"
             }
           }
         ],
         "responses": {
-          "200 : user": {
+          "200": {
             "description": "jogging data arrived successfully for regular user",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "pageNumber": {
-                      "type": "number",
-                      "description": "the number of current page"
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/User"
                     },
-                    "count": {
-                      "type": "number",
-                      "description": "the count number of all jogging at the current page"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type":"object",
-                        "properties": {
-                          "jogging_id": {
-                            "type": "number",
-                            "description": "the id of current jogging"
-                          },
-                          "date": {
-                            "type": "date as a string",
-                            "description": "the date of jogging"
-                          },
-                          "distance": {
-                            "type": "number",
-                            "description": "the distance of jogging"
-                          },
-                          "time": {
-                            "type": "number",
-                            "description": "total time of jogging"
-                          }
-                        }
-                      }
+                    {
+                      "$ref": "#/components/schemas/Admin"
                     }
-                  }
-                }
-              }
-            }
-          },
-          "200 : admin": {
-            "description": "jogging data arrived successfully for admin user",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "pageNumber": {
-                      "type": "number",
-                      "description": "the number of current page"
-                    },
-                    "count": {
-                      "type": "number",
-                      "description": "the count number of all jogging at the current page"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type":"object",
-                        "properties": {
-                          "jogging_id": {
-                            "type": "number",
-                            "description": "the id of current jogging"
-                          },
-                          "date": {
-                            "type": "date as a string",
-                            "description": "the date of jogging"
-                          },
-                          "distance": {
-                            "type": "number",
-                            "description": "the distance of jogging"
-                          },
-                          "time": {
-                            "type": "number",
-                            "description": "total time of jogging"
-                          },
-                          "user_id": {
-                            "type": "number",
-                            "description": "the id of user who own this jogging"
-                          }
-                        }
-                      }
-                    }
-                  }
+                  ]
                 }
               }
             }
@@ -414,16 +341,16 @@
                       "description": "the id of current jogging"
                     },
                     "date": {
-                      "type": "date as a string",
-                      "description": "the date of jogging"
+                      "type": "string",
+                      "description": "the date of jogging (YYYY-MM-DD HH:MM:SS)"
                     },
                     "distance": {
                       "type": "number",
-                      "description": "the distance of jogging"
+                      "description": "the distance of jogging (in meter)"
                     },
                     "time": {
-                      "type": "number",
-                      "description": "total time of jogging"
+                      "type": "string",
+                      "description": "total time of jogging (HH:MM:SS)"
                     },
                     "user_id": {
                       "type": "number",
@@ -539,16 +466,16 @@
                 "type": "object",
                 "properties": {
                   "date": {
-                    "type": "date",
-                    "description": "example: '2021-01-29 04:15:00'"
+                    "type": "string",
+                    "description": "the date of jogging (YYYY-MM-DD HH:MM:SS)"
                   },
                   "distance": {
                     "type": "number",
-                    "description": "distance in meters"
+                    "description": "the distance of jogging (in meter)"
                   },
                   "time": {
-                    "type": "time as astring",
-                    "description": "example: '01:25:15'"
+                    "type": "string",
+                    "description": "total time of jogging (HH:MM:SS)"
                   }
                 }
               }
@@ -790,16 +717,16 @@
                 "type": "object",
                 "properties": {
                   "date": {
-                    "type": "date",
-                    "description": "example: '2021-01-29 04:15:00'"
+                    "type": "string",
+                    "description": "the date of jogging (YYYY-MM-DD HH:MM:SS)"
                   },
                   "distance": {
                     "type": "number",
-                    "description": "distance in meters"
+                    "description": "the distance of jogging (in meter)"
                   },
                   "time": {
-                    "type": "time as astring",
-                    "description": "example: '01:25:15'"
+                    "type": "string",
+                    "description": "total time of jogging (HH:MM:SS)"
                   }
                 }
               }
@@ -1034,7 +961,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "type":"object",
+                        "type": "object",
                         "properties": {
                           "user_id": {
                             "type": "number",
@@ -1647,6 +1574,88 @@
                       "description": "user isn't authorized to access this content"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "type": "number",
+            "description": "the number of current page"
+          },
+          "count": {
+            "type": "number",
+            "description": "the count number of all jogging at the current page"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "jogging_id": {
+                  "type": "number",
+                  "description": "the id of current jogging"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "the date of jogging (YYYY-MM-DD HH:MM:SS)"
+                },
+                "distance": {
+                  "type": "number",
+                  "description": "the distance of jogging (in meter)"
+                },
+                "time": {
+                  "type": "number",
+                  "description": "total time of jogging (HH:MM:SS)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Admin": {
+        "type": "object",
+        "properties": {
+          "pageNumber": {
+            "type": "number",
+            "description": "the number of current page"
+          },
+          "count": {
+            "type": "number",
+            "description": "the count number of all jogging at the current page"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "jogging_id": {
+                  "type": "number",
+                  "description": "the id of current jogging"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "the date of jogging (YYYY-MM-DD HH:MM:SS)"
+                },
+                "distance": {
+                  "type": "number",
+                  "description": "the distance of jogging (in meter)"
+                },
+                "time": {
+                  "type": "number",
+                  "description": "total time of jogging (HH:MM:SS)"
+                },
+                "user_id": {
+                  "type": "number",
+                  "description": "the id of user who own this jogging"
                 }
               }
             }
